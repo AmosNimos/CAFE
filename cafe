@@ -2,12 +2,15 @@
 
 # cafe (Convert All File Extensions)
 
-. flag
-flag "$@"
+# Get the file name and format
+file=$1
+filename=$(basename -- "$file")
+extension="${filename##*.}"
+filename="${filename%.*}"
 
-if [[ $flag_h ]]; then
-	usage
-fi
+# Supported formats for conversion
+pandoc_formats="markdown html latex odt epub docx"
+calibre_formats="pdf mobi azw3"
 
 # usage function for the script
 usage() {
@@ -22,6 +25,19 @@ usage() {
     exit 1
 }
 
+while getopts 'f:h' flag; do
+  case "${flag}" in
+    f) file="${OPTARG}" ;;
+    h) usage
+       exit 0
+    ;;
+    *) usage
+       exit 1 
+    ;;
+  esac
+done
+
+
 # Check if pandoc and Calibre are installed
 if ! command -v pandoc &> /dev/null; then
     echo "Error: pandoc is not installed. Please install pandoc and try again."
@@ -33,24 +49,19 @@ if ! command -v ebook-convert &> /dev/null; then
     exit 1
 fi
 
-# Get the file name and format
-file=$1
-filename=$(basename -- "$file")
-extension="${filename##*.}"
-filename="${filename%.*}"
-
-# Supported formats for conversion
-pandoc_formats="markdown html latex odt epub docx"
-calibre_formats="pdf mobi azw3"
-
+check_completion=0
 # Convert file to all supported formats using pandoc
 for format in $pandoc_formats; do
-    pandoc "$file" -s -o "$filename.$format"
+    pandoc "$file" -s -o "$filename.$format" && check_completion=$((check_completion+1))
 done
 
 # Convert file to all supported formats using Calibre
 for format in $calibre_formats; do
-    ebook-convert "$file" "$filename.$format"
+    ebook-convert "$file" "$filename.$format" && check_completion=$((check_completion+1))
 done
 
-echo "Conversion completed successfully."
+if [[ $check_completion -eq 2 ]] then
+    echo "Conversion completed successfully."
+else
+    echo "Conversion incompleted failed to complete conversion."
+fi
