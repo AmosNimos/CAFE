@@ -1,6 +1,10 @@
-# CAFE
 
-<img src="https://www.nicepng.com/png/detail/129-1293321_png-free-stock-bean-cafe-flavor-svg-png.png" alt="Png Free Stock Bean Cafe Flavor Svg Png Icon Free - Coffee Beans Png Black@nicepng.com">
+
+# CAFE 
+
+<img src="https://cdn-icons-png.flaticon.com/512/924/924514.png" width="150" 
+     height="150" alt="Png Free Stock Bean Cafe Flavor Svg Png Icon Free - Coffee Beans Png Black@nicepng.com" style="filter: invert(1) brightness(200%) ;">
+
 
 Convert All File Extensions - converts a file to all supported formats using pandoc and Calibre
 
